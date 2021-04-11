@@ -21,7 +21,7 @@ export class MainComponent implements OnInit {
 
     const sceneInfo = [
       {
-        typeof: 'sticky',
+        type: 'sticky',
         heightNum: 5, //브라우저 높이의 5배로 scrollHeight 세팅
         scrollHeight: 0, //각 스크롤의 높이 정보
         objs: {
@@ -35,37 +35,71 @@ export class MainComponent implements OnInit {
           ///opcity
           messageA_opacity_in: [0, 1, { start: 0.1, end: 0.2 }],
           messageB_opacity_in: [0, 1, { start: 0.3, end: 0.4 }],
+          messageC_opacity_in: [0, 1, { start: 0.5, end: 0.6 }],
+          messageD_opacity_in: [0, 1, { start: 0.7, end: 0.8 }],
 
           messageA_opacity_out: [1, 0, { start: 0.25, end: 0.3 }],
-          messageB_opacity_out: [0, 1, { start: 0.35, end: 0.4 }],
+          messageB_opacity_out: [1, 0, { start: 0.45, end: 0.5 }],
+          messageC_opacity_out: [1, 0, { start: 0.65, end: 0.7 }],
+          messageD_opacity_out: [1, 0, { start: 0.85, end: 0.9 }],
 
           ///translate
           messageA_translateY_in: [20, 0, { start: 0.1, end: 0.2 }],
+          messageB_translateY_in: [20, 0, { start: 0.3, end: 0.4 }],
+          messageC_translateY_in: [20, 0, { start: 0.5, end: 0.6 }],
+          messageD_translateY_in: [20, 0, { start: 0.7, end: 0.8 }],
+
           messageA_translateY_out: [0, -20, { start: 0.25, end: 0.3 }],
+          messageB_translateY_out: [0, -20, { start: 0.45, end: 0.5 }],
+          messageC_translateY_out: [0, -20, { start: 0.65, end: 0.7 }],
+          messageD_translateY_out: [0, -20, { start: 0.85, end: 0.9 }],
         },
       },
       {
         type: 'normal',
-        heightNum: 5,
+
         scrollHeight: 0,
         objs: {
           container: document.querySelector('#scroll-section-1'),
+          content: document.querySelector('#scroll-section-1 .description'),
         },
       },
       {
-        typeof: 'sticky',
+        type: 'sticky',
         heightNum: 5,
         scrollHeight: 0,
         objs: {
           container: document.querySelector('#scroll-section-2'),
+          messageA: document.querySelector('#scroll-section-2 .a'),
+          messageB: document.querySelector('#scroll-section-2 .b'),
+          messageC: document.querySelector('#scroll-section-2 .c'),
+          pinB: document.querySelector('#scroll-section-2 .b .pin'),
+          pinC: document.querySelector('#scroll-section-2 .c .pin'),
+        },
+        values: {
+          messageA_translateY_in: [20, 0, { start: 0.15, end: 0.2 }],
+          messageB_translateY_in: [30, 0, { start: 0.6, end: 0.65 }],
+          messageC_translateY_in: [30, 0, { start: 0.87, end: 0.92 }],
+          messageA_opacity_in: [0, 1, { start: 0.25, end: 0.3 }],
+          messageB_opacity_in: [0, 1, { start: 0.6, end: 0.65 }],
+          messageC_opacity_in: [0, 1, { start: 0.87, end: 0.92 }],
+          messageA_translateY_out: [0, -20, { start: 0.4, end: 0.45 }],
+          messageB_translateY_out: [0, -20, { start: 0.68, end: 0.73 }],
+          messageC_translateY_out: [0, -20, { start: 0.95, end: 1 }],
+          messageA_opacity_out: [1, 0, { start: 0.4, end: 0.45 }],
+          messageB_opacity_out: [1, 0, { start: 0.68, end: 0.73 }],
+          messageC_opacity_out: [1, 0, { start: 0.95, end: 1 }],
+          pinB_scaleY: [0.5, 1, { start: 0.6, end: 0.65 }],
+          pinC_scaleY: [0.5, 1, { start: 0.87, end: 0.92 }],
         },
       },
       {
-        typeof: 'sticky',
-        heightNum: 5,
+        type: 'sticky',
+        //heightNum: 5,//범위 오류로 주석처리
         scrollHeight: 0,
         objs: {
           container: document.querySelector('#scroll-section-3'),
+          canvasCaption: document.querySelector('.canvas-caption'),
         },
       },
     ];
@@ -75,9 +109,18 @@ export class MainComponent implements OnInit {
     /** 각 스크롤의 섹션 높이 세팅 */
     function setLayout() {
       for (let i = 0; i < sceneInfo.length; i++) {
-        sceneInfo[i].scrollHeight = sceneInfo[i].heightNum * window.innerHeight;
-        (sceneInfo[i].objs
-          .container as HTMLElement).style.height = `${sceneInfo[i].scrollHeight}px`;
+        if (sceneInfo[i].type === 'sticky') {
+          sceneInfo[i].scrollHeight =
+            sceneInfo[i].heightNum * window.innerHeight;
+          (sceneInfo[i].objs
+            .container as HTMLElement).style.height = `${sceneInfo[i].scrollHeight}px`;
+        }
+        //없어도 무방 불필요한 section의 높이 지정때문에 설정
+        else if (sceneInfo[i].type === 'normal') {
+          (sceneInfo[i].objs.container as HTMLElement).style.height = `${
+            (sceneInfo[i].objs.container as HTMLElement).scrollHeight
+          }px`;
+        }
       }
 
       yOffset = window.pageYOffset;
@@ -99,6 +142,7 @@ export class MainComponent implements OnInit {
     function scrollLoop() {
       enterNewScene = false; //스크롤 동작할때마다 초기화
       prevScrollHeight = 0;
+      console.log(currentScene);
       for (let i = 0; i < currentScene; i++) {
         prevScrollHeight += sceneInfo[i].scrollHeight;
       }
@@ -134,42 +178,163 @@ export class MainComponent implements OnInit {
       //console.log(currentScene, currentYOffset);
 
       const scrollHeight = sceneInfo[currentScene].scrollHeight;
+
       const scrollRatio = currentYOffset / scrollHeight;
-      console.log(scrollRatio);
 
       switch (currentScene) {
         case 0:
-          let messageA_opacity_in = calcValues(
-            values.messageA_opacity_in,
-            currentYOffset
-          );
-          let messageA_opacity_out = calcValues(
-            values.messageA_opacity_out,
-            currentYOffset
-          );
-          let messageA_translate_in = calcValues(
-            values.messageA_translateY_in,
-            currentYOffset
-          );
-          let messageA_translate_out = calcValues(
-            values.messageA_translateY_out,
-            currentYOffset
-          );
-
           if (scrollRatio <= 0.22) {
             //in
-            (obj.messageA as HTMLElement).style.opacity = messageA_opacity_in;
-            (obj.messageA as HTMLElement).style.transform = `translateY(${messageA_translate_in}%)`;
+            (obj.messageA as HTMLElement).style.opacity = calcValues(
+              values.messageA_opacity_in,
+              currentYOffset
+            );
+            (obj.messageA as HTMLElement).style.transform = `translateY(${calcValues(
+              values.messageA_translateY_in,
+              currentYOffset
+            )}%)`;
           } else {
             //out
-            (obj.messageA as HTMLElement).style.opacity = messageA_opacity_out;
-            (obj.messageA as HTMLElement).style.transform = `translateY(${messageA_translate_out}%)`;
+            (obj.messageA as HTMLElement).style.opacity = calcValues(
+              values.messageA_opacity_out,
+              currentYOffset
+            );
+            (obj.messageA as HTMLElement).style.transform = `translateY(${calcValues(
+              values.messageA_translateY_out,
+              currentYOffset
+            )}%)`;
+          }
+          if (scrollRatio <= 0.42) {
+            //in
+            (obj.messageB as HTMLElement).style.opacity = calcValues(
+              values.messageB_opacity_in,
+              currentYOffset
+            );
+            (obj.messageB as HTMLElement).style.transform = `translateY(${calcValues(
+              values.messageB_translateY_in,
+              currentYOffset
+            )}%)`;
+          } else {
+            //out
+            (obj.messageB as HTMLElement).style.opacity = calcValues(
+              values.messageB_opacity_out,
+              currentYOffset
+            );
+            (obj.messageB as HTMLElement).style.transform = `translateY(${calcValues(
+              values.messageB_translateY_out,
+              currentYOffset
+            )}%)`;
+          }
+          if (scrollRatio <= 0.62) {
+            //in
+            (obj.messageC as HTMLElement).style.opacity = calcValues(
+              values.messageC_opacity_in,
+              currentYOffset
+            );
+            (obj.messageC as HTMLElement).style.transform = `translateY(${calcValues(
+              values.messageC_translateY_in,
+              currentYOffset
+            )}%)`;
+          } else {
+            //out
+            (obj.messageC as HTMLElement).style.opacity = calcValues(
+              values.messageC_opacity_out,
+              currentYOffset
+            );
+            (obj.messageC as HTMLElement).style.transform = `translateY(${calcValues(
+              values.messageC_translateY_out,
+              currentYOffset
+            )}%)`;
+          }
+          if (scrollRatio <= 0.82) {
+            //in
+            (obj.messageD as HTMLElement).style.opacity = calcValues(
+              values.messageD_opacity_in,
+              currentYOffset
+            );
+            (obj.messageD as HTMLElement).style.transform = `translateY(${calcValues(
+              values.messageD_translateY_in,
+              currentYOffset
+            )}%)`;
+          } else {
+            //out
+            (obj.messageD as HTMLElement).style.opacity = calcValues(
+              values.messageD_opacity_out,
+              currentYOffset
+            );
+            (obj.messageD as HTMLElement).style.transform = `translateY(${calcValues(
+              values.messageD_translateY_out,
+              currentYOffset
+            )}%)`;
           }
 
           break;
-        case 1:
-          break;
+
         case 2:
+          if (scrollRatio <= 0.32) {
+            //in
+            (obj.messageA as HTMLElement).style.opacity = calcValues(
+              values.messageA_opacity_in,
+              currentYOffset
+            );
+            (obj.messageA as HTMLElement).style.transform = `translateY(${calcValues(
+              values.messageA_translateY_in,
+              currentYOffset
+            )}%)`;
+          } else {
+            //out
+            (obj.messageA as HTMLElement).style.opacity = calcValues(
+              values.messageA_opacity_out,
+              currentYOffset
+            );
+            (obj.messageA as HTMLElement).style.transform = `translateY(${calcValues(
+              values.messageA_translateY_out,
+              currentYOffset
+            )}%)`;
+          }
+          if (scrollRatio <= 0.67) {
+            //in
+            (obj.messageB as HTMLElement).style.opacity = calcValues(
+              values.messageB_opacity_in,
+              currentYOffset
+            );
+            (obj.messageB as HTMLElement).style.transform = `translateY(${calcValues(
+              values.messageB_translateY_in,
+              currentYOffset
+            )}%)`;
+          } else {
+            //out
+            (obj.messageB as HTMLElement).style.opacity = calcValues(
+              values.messageB_opacity_out,
+              currentYOffset
+            );
+            (obj.messageB as HTMLElement).style.transform = `translateY(${calcValues(
+              values.messageB_translateY_out,
+              currentYOffset
+            )}%)`;
+          }
+          if (scrollRatio <= 0.93) {
+            //in
+            (obj.messageC as HTMLElement).style.opacity = calcValues(
+              values.messageC_opacity_in,
+              currentYOffset
+            );
+            (obj.messageC as HTMLElement).style.transform = `translateY(${calcValues(
+              values.messageC_translateY_in,
+              currentYOffset
+            )}%)`;
+          } else {
+            //out
+            (obj.messageC as HTMLElement).style.opacity = calcValues(
+              values.messageC_opacity_out,
+              currentYOffset
+            );
+            (obj.messageC as HTMLElement).style.transform = `translateY(${calcValues(
+              values.messageC_translateY_out,
+              currentYOffset
+            )}%)`;
+          }
+
           break;
         case 3:
           break;

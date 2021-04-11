@@ -18,7 +18,14 @@
   opacity: 0;
   top: 35vh;
 }
-
+#scroll-section-2 .b {
+  top: 10%;
+  left: 40%;
+}
+#scroll-section-2 .c {
+  top: 15%;
+  left: 45%;
+}
 .main-message p {
   line-height: 1.2;
   text-align: center;
@@ -53,7 +60,7 @@
 .pin {
   width: 1px;
   height: 100px;
-  color: rgb(29, 29, 31);
+  background: rgb(29, 29, 31);
 }
 
 .mid-message {
@@ -97,6 +104,14 @@
 @media (min-width: 1200px) {
   #scroll-section-0 h1 {
     font-size: 9vw;
+  }
+
+  #scroll-section-2 .b {
+    top: 20%;
+    left: 53%;
+  }
+  #scroll-section-2 .c {
+    left: 55%;
   }
   .main-message {
     font-size: 4vw;
