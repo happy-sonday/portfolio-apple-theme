@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ComponentFactoryResolver, OnInit } from '@angular/core';
 
 @Component({
   selector: 'app-main',
@@ -13,8 +13,9 @@ export class MainComponent implements OnInit {
     let prevScrollHeight = 0; //현재 스크롤 위치(yOffset)보다 이전에 위치한 스크롤 섹션들의 스크롤 높이값의 합
     let currentScene = 0; //현재 활성화된(눈 앞에 보고있는) 씬(scroll-section)
     let bodyElem = document.querySelector('.content-body');
-    //기본 섹션값 및 새로고침시 sticky elem이 보일 수 있도록 대응
+    let enterNewScene = false; //새로운 scene이 시작되는 순간 true;
 
+    //기본 섹션값 및 새로고침시 sticky elem이 보일 수 있도록 대응
     bodyElem.setAttribute('id', `show-scene-0`);
 
     const sceneInfo = [
@@ -86,23 +87,32 @@ export class MainComponent implements OnInit {
 
     /** */
     function scrollLoop() {
+      enterNewScene = false; //스크롤 동작할때마다 초기화
       prevScrollHeight = 0;
       for (let i = 0; i < currentScene; i++) {
         prevScrollHeight += sceneInfo[i].scrollHeight;
       }
 
       if (yOffset > prevScrollHeight + sceneInfo[currentScene].scrollHeight) {
+        enterNewScene = true;
         currentScene++;
       }
 
       if (yOffset < prevScrollHeight) {
+        enterNewScene = true;
         if (currentScene === 0) return; //브라우저 바운스 효과로 인해(e. 아이폰 새로고침) 마이너스가 되는 것을 방지(모바일)
+
         currentScene--;
       }
 
       //angular에서 해당 컴포넌트 내 외부 tag를 참조할 수 없습니다:)
       // document.body.setAttribute('id', `show-scene-${currentScene}`);
       bodyElem.setAttribute('id', `show-scene-${currentScene}`);
+
+      //scen이 바뀌는 찰나에 음수값이 발생 방지
+      //scene이 바뀔때 playAnimation함수가 동작하지 않도록 return
+      if (enterNewScene) return;
+
       playAnimation();
     }
 
@@ -118,7 +128,7 @@ export class MainComponent implements OnInit {
             values.messageA_Opacity,
             currentYOffset
           );
-
+          console.log(messageA_Opacity_in);
           (obj.messageA as HTMLElement).style.opacity = messageA_Opacity_in;
 
           break;
