@@ -8,6 +8,7 @@ import { HeaderComponent } from './components/header/header.component';
 import { FooterComponent } from './components/footer/footer.component';
 import { MainComponent } from './pages/main/main.component';
 import { LayoutComponent } from './components/layout/layout.component';
+import { VideoComponent } from './components/video/video.component';
 
 @NgModule({
   declarations: [
@@ -16,6 +17,7 @@ import { LayoutComponent } from './components/layout/layout.component';
     LayoutComponent,
     HeaderComponent,
     FooterComponent,
+    VideoComponent,
   ],
   imports: [BrowserModule, AppRoutingModule],
   providers: [],

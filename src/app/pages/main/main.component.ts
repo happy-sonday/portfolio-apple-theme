@@ -142,7 +142,6 @@ export class MainComponent implements OnInit {
     function scrollLoop() {
       enterNewScene = false; //스크롤 동작할때마다 초기화
       prevScrollHeight = 0;
-      console.log(currentScene);
       for (let i = 0; i < currentScene; i++) {
         prevScrollHeight += sceneInfo[i].scrollHeight;
       }
