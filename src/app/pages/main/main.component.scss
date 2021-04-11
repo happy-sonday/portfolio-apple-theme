@@ -16,6 +16,7 @@
   font-size: 1.5rem;
   padding: 0 1rem;
   opacity: 0;
+  top: 35vh;
 }
 
 .main-message p {
@@ -81,7 +82,7 @@
 .sticky-elem {
   display: none;
   position: fixed;
-  top: 0;
+
   left: 0;
   width: 100%;
 }

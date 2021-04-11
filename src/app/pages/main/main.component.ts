@@ -1,4 +1,5 @@
 import { Component, ComponentFactoryResolver, OnInit } from '@angular/core';
+import { ObjectUnsubscribedError } from 'rxjs';
 
 @Component({
   selector: 'app-main',
@@ -31,7 +32,10 @@ export class MainComponent implements OnInit {
           messageD: document.querySelector('#scroll-section-0 .main-message.d'),
         },
         values: {
-          messageA_Opacity: [0, 1],
+          messageA_opacity_in: [0, 1, { start: 0.1, end: 0.2 }],
+          messageB_opacity_in: [0, 1, { start: 0.3, end: 0.4 }],
+          messageA_opacity_out: [1, 0, { start: 0.25, end: 0.3 }],
+          messageB_opacity_out: [0, 1, { start: 0.35, end: 0.4 }],
         },
       },
       {
@@ -122,14 +126,29 @@ export class MainComponent implements OnInit {
       const values = sceneInfo[currentScene].values;
       const currentYOffset = yOffset - prevScrollHeight;
       //console.log(currentScene, currentYOffset);
+
+      const scrollHeight = sceneInfo[currentScene].scrollHeight;
+      const scrollRatio = currentYOffset / scrollHeight;
+      console.log(scrollRatio);
+
       switch (currentScene) {
         case 0:
-          let messageA_Opacity_in = calcValues(
-            values.messageA_Opacity,
+          let messageA_opacity_in = calcValues(
+            values.messageA_opacity_in,
             currentYOffset
           );
-          console.log(messageA_Opacity_in);
-          (obj.messageA as HTMLElement).style.opacity = messageA_Opacity_in;
+          let messageA_opacity_out = calcValues(
+            values.messageA_opacity_out,
+            currentYOffset
+          );
+
+          if (scrollRatio <= 0.22) {
+            //in
+            (obj.messageA as HTMLElement).style.opacity = messageA_opacity_in;
+          } else {
+            //out
+            (obj.messageA as HTMLElement).style.opacity = messageA_opacity_out;
+          }
 
           break;
         case 1:
@@ -144,10 +163,33 @@ export class MainComponent implements OnInit {
     /** 현재 scene에서 scroll 비율 */
     function calcValues(values, currentYOffset) {
       let rv;
+      const scrollHeight = sceneInfo[currentScene].scrollHeight;
       //현재 씬(스크롤섹션)에서 크롤된 범위를 비율로 구하기
       let scrollRatio = currentYOffset / sceneInfo[currentScene].scrollHeight;
-      rv = scrollRatio * (values[1] - values[0]) + values[0];
 
+      if (values.length === 3) {
+        //start ~ end 사이 애니메이션 실행
+        const partScrollStart = values[2].start * scrollHeight;
+        const partScrollEnd = values[2].end * scrollHeight;
+        //const partScrollHeight = partScrollEnd - partScrollStart;
+        const partScrollHeight =
+          scrollHeight * (values[2].end - values[2].start);
+        if (
+          currentYOffset >= partScrollStart &&
+          currentYOffset <= partScrollEnd
+        ) {
+          rv =
+            ((currentYOffset - partScrollStart) / partScrollHeight) *
+              (values[1] - values[0]) +
+            values[0];
+        } else if (currentYOffset < partScrollStart) {
+          rv = values[0];
+        } else if (currentYOffset > partScrollStart) {
+          rv = values[1];
+        }
+      } else {
+        rv = scrollRatio * (values[1] - values[0]) + values[0];
+      }
       return rv;
     }
 
