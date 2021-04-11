@@ -32,10 +32,16 @@ export class MainComponent implements OnInit {
           messageD: document.querySelector('#scroll-section-0 .main-message.d'),
         },
         values: {
+          ///opcity
           messageA_opacity_in: [0, 1, { start: 0.1, end: 0.2 }],
           messageB_opacity_in: [0, 1, { start: 0.3, end: 0.4 }],
+
           messageA_opacity_out: [1, 0, { start: 0.25, end: 0.3 }],
           messageB_opacity_out: [0, 1, { start: 0.35, end: 0.4 }],
+
+          ///translate
+          messageA_translateY_in: [20, 0, { start: 0.1, end: 0.2 }],
+          messageA_translateY_out: [0, -20, { start: 0.25, end: 0.3 }],
         },
       },
       {
@@ -141,13 +147,23 @@ export class MainComponent implements OnInit {
             values.messageA_opacity_out,
             currentYOffset
           );
+          let messageA_translate_in = calcValues(
+            values.messageA_translateY_in,
+            currentYOffset
+          );
+          let messageA_translate_out = calcValues(
+            values.messageA_translateY_out,
+            currentYOffset
+          );
 
           if (scrollRatio <= 0.22) {
             //in
             (obj.messageA as HTMLElement).style.opacity = messageA_opacity_in;
+            (obj.messageA as HTMLElement).style.transform = `translateY(${messageA_translate_in}%)`;
           } else {
             //out
             (obj.messageA as HTMLElement).style.opacity = messageA_opacity_out;
+            (obj.messageA as HTMLElement).style.transform = `translateY(${messageA_translate_out}%)`;
           }
 
           break;
