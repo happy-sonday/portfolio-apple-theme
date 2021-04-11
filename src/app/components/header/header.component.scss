@@ -1,0 +1,29 @@
+.global-nav {
+  height: 44px;
+  padding: 0 1rem;
+}
+.global-nav-links {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 1200px;
+  margin: 0 auto;
+  height: 100%;
+}
+
+.global-nav:nth-child(2) {
+  .local {
+    height: 52px;
+  }
+
+  .global-nav-item:first-child {
+    margin-right: auto;
+    font-weight: bold;
+    font-size: 1.2rem;
+  }
+
+  .global-nav-item:not(:first-child) {
+    margin-left: 2em;
+    font-size: 0.6rem;
+  }
+}

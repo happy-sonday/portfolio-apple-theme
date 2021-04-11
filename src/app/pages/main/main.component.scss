@@ -1,0 +1,114 @@
+.scroll-section {
+  padding-top: 50vh;
+}
+
+#scroll-section-0 h1 {
+  font-size: 2.5rem;
+  text-align: center;
+}
+.main-message {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 5px 0;
+  height: 5em;
+  font-size: 1.5rem;
+  padding: 0 1rem;
+}
+
+.main-message p {
+  line-height: 1.2;
+  text-align: center;
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+.description {
+  padding: 0 1rem;
+  font-size: 1.2rem;
+  color: #888;
+}
+
+.description strong {
+  float: left;
+  margin-right: 0.2em;
+  font-size: 2rem;
+  color: rgb(29, 29, 31);
+}
+
+.main-message small {
+  display: block;
+  margin-bottom: 0.5em;
+  font-size: 1rem;
+}
+
+.desc-message {
+  width: 50%;
+  font-weight: bold;
+}
+
+.pin {
+  width: 1px;
+  height: 100px;
+  color: rgb(29, 29, 31);
+}
+
+.mid-message {
+  max-width: 1200px;
+  margin: 0 auto;
+  font-size: 1.5rem;
+  padding: 0 1rem;
+  color: #888;
+}
+
+#scroll-section-3 {
+  line-height: 1.5;
+}
+.mid-message strong {
+  display: block;
+  color: black;
+}
+.canvas-caption {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem;
+  color: #888;
+  font-size: 1.2rem;
+}
+
+.sticky-elem {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+}
+
+@media (min-width: 1200px) {
+  #scroll-section-0 h1 {
+    font-size: 9vw;
+  }
+  .main-message {
+    font-size: 4vw;
+  }
+
+  .description {
+    max-width: 1200px;
+    font-size: 2rem;
+    margin: 0 auto;
+  }
+
+  .description strong {
+    font-size: 6rem;
+  }
+
+  #scroll-section-2 .main-message {
+    font-size: 6vw;
+  }
+  .main-message small {
+    font-size: 1.5vw;
+  }
+
+  .desc-message {
+    width: 20%;
+  }
+}
