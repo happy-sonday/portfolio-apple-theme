@@ -5,6 +5,7 @@
   width: 100%;
   height: 44px;
   padding: 0 1rem;
+  z-index: 10;
 }
 .global-nav-links {
   display: flex;
@@ -17,6 +18,7 @@
 
 .global-nav:nth-child(2) {
   top: 44px;
+  z-index: 11;
   .local {
     height: 52px;
   }

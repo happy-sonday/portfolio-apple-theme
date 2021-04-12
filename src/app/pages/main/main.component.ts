@@ -30,6 +30,11 @@ export class MainComponent implements OnInit {
           messageB: document.querySelector('#scroll-section-0 .main-message.b'),
           messageC: document.querySelector('#scroll-section-0 .main-message.c'),
           messageD: document.querySelector('#scroll-section-0 .main-message.d'),
+          canvas: document.querySelector('#video-canvas-0'),
+          context: (document.querySelector(
+            '#video-canvas-0'
+          ) as HTMLCanvasElement).getContext('2d'),
+          videoImages: [],
         },
         values: {
           ///opcity
@@ -53,6 +58,10 @@ export class MainComponent implements OnInit {
           messageB_translateY_out: [0, -20, { start: 0.45, end: 0.5 }],
           messageC_translateY_out: [0, -20, { start: 0.65, end: 0.7 }],
           messageD_translateY_out: [0, -20, { start: 0.85, end: 0.9 }],
+
+          //canvas Image
+          videoImageCount: 300,
+          imageSequence: [0, 299],
         },
       },
       {
@@ -106,6 +115,17 @@ export class MainComponent implements OnInit {
 
     setLayout();
 
+    function setCanvasImages() {
+      let imgElem;
+      for (let i = 0; i < sceneInfo[0].values.videoImageCount; i++) {
+        imgElem = new Image();
+        imgElem.src = `../../../assets/video/001/IMG_${6726 + i}.JPG`;
+        sceneInfo[0].objs.videoImages.push(imgElem);
+      }
+    }
+
+    setCanvasImages();
+
     /** 각 스크롤의 섹션 높이 세팅 */
     function setLayout() {
       for (let i = 0; i < sceneInfo.length; i++) {
@@ -136,9 +156,12 @@ export class MainComponent implements OnInit {
           break;
         }
       }
+
+      const heightRatio = window.innerHeight / 1000;
+      (sceneInfo[0].objs
+        .canvas as HTMLCanvasElement).style.transform = `translate3d(-50%, -50%, 0) scale(${heightRatio})`;
     }
 
-    /** */
     function scrollLoop() {
       enterNewScene = false; //스크롤 동작할때마다 초기화
       prevScrollHeight = 0;
@@ -182,6 +205,11 @@ export class MainComponent implements OnInit {
 
       switch (currentScene) {
         case 0:
+          let sequence = Math.round(
+            calcValues(values.imageSequence, currentYOffset)
+          );
+          //console.log(sequence);
+          obj.context.drawImage(obj.videoImages[sequence], 0, 0);
           if (scrollRatio <= 0.22) {
             //in
             (obj.messageA as HTMLElement).style.opacity = calcValues(

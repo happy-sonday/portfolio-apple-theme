@@ -1,5 +1,4 @@
 .scroll-section {
-  border: 3px solid red;
   padding-top: 50vh;
 }
 
@@ -101,6 +100,16 @@
   display: block;
 }
 
+.sticky-elem-canvas {
+  top: 0;
+  height: 100%;
+  background-color: #ccc;
+}
+.sticky-elem-canvas canvas {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+}
 @media (min-width: 1200px) {
   #scroll-section-0 h1 {
     font-size: 9vw;

@@ -1,7 +1,11 @@
 <div class="contanier">
-  <video
+  <!-- FIXME:이렇게 하는경우 고화질일 경우에는 버벅거리고, 저화질인 경우에는 끊김이 없지만 찌글찌글 퀄리티가 엄청 낮아보인다 -->
+  <!--   <video
     class="sample-video"
     src="./../../../assets/video/sample-high.mp4"
     muted
-  ></video>
+  ></video> -->
+  <!-- FIXME:미세한 끊김처리 결국 캔버스를 활용한다 -->
+  <!-- <img class="sample-img" src="../../../assets/video/002/IMG_7027.JPG" /> -->
+  <canvas class="sample-canvas" width="1920" height="1080"></canvas>
 </div>
