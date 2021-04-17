@@ -124,6 +124,15 @@ export class MainComponent implements OnInit {
         objs: {
           container: document.querySelector('#scroll-section-3'),
           canvasCaption: document.querySelector('.canvas-caption'),
+          canvas: document.querySelector('.image-blend-canvas'),
+          context: (document.querySelector(
+            '.image-blend-canvas'
+          ) as HTMLCanvasElement).getContext('2d'),
+          imagesPath: [
+            '/assets/img/blend-image-1.jpg',
+            '/assets/img/blend-image-2.jpg',
+          ],
+          images: [],
         },
       },
     ];
@@ -144,6 +153,13 @@ export class MainComponent implements OnInit {
         imgElem2.src = `../../../assets/video/002/IMG_${7027 + i}.JPG`;
         sceneInfo[2].objs.videoImages.push(imgElem2);
       }
+      let imgElem3;
+      for (let i = 0; i < sceneInfo[3].objs.imagesPath.length; i++) {
+        imgElem3 = new Image();
+        imgElem3.src = sceneInfo[3].objs.imagesPath[i];
+        sceneInfo[3].objs.images.push(imgElem3);
+      }
+      console.log(sceneInfo[3].objs.images);
     }
 
     setCanvasImages();
@@ -412,6 +428,27 @@ export class MainComponent implements OnInit {
 
           break;
         case 3:
+          // 가로세로 모두 꽉차게 하기위해 여기서 세팅(계산 필요)
+          //현재 브라우저의 크기 /설정한 캔버스의 width 1920
+          const widthRatio =
+            window.innerWidth / (obj.canvas as HTMLCanvasElement).width;
+
+          const heightRatio =
+            window.innerHeight / (obj.canvas as HTMLCanvasElement).height;
+          let canvasScaleRatio;
+
+          if (widthRatio <= heightRatio) {
+            //캔버스보다 브라우저 창이 홀쭉한 경우
+            canvasScaleRatio = heightRatio;
+            console.log('widthRatio로 결정');
+          } else {
+            //캔버스보다 브라우저 창이 납작한 경우
+            canvasScaleRatio = widthRatio;
+            console.log('heightRatio로 결정');
+          }
+          (obj.canvas as HTMLCanvasElement).style.transform = `scale(${canvasScaleRatio})`;
+          obj.context.drawImage(obj.images[0], 0, 0);
+
           break;
       }
     }
