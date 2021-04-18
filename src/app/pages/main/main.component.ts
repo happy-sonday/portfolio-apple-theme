@@ -134,6 +134,10 @@ export class MainComponent implements OnInit {
           ],
           images: [],
         },
+        values: {
+          rect1X: [0, 0, { start: 0, end: 0 }],
+          rect2X: [0, 0, { start: 0, end: 0 }],
+        },
       },
     ];
 
@@ -449,6 +453,39 @@ export class MainComponent implements OnInit {
           (obj.canvas as HTMLCanvasElement).style.transform = `scale(${canvasScaleRatio})`;
           obj.context.drawImage(obj.images[0], 0, 0);
 
+          //캔버스 사이즈에 맞춰 가정한 innerWidth 와 innerHeight
+          const recalculatedInnerWidth = window.innerWidth / canvasScaleRatio;
+          const recalculatedInnerHeight = window.innerHeight / canvasScaleRatio;
+          console.log(recalculatedInnerWidth, recalculatedInnerHeight);
+
+          const whiteRectWidth = recalculatedInnerWidth * 0.15; //현재 리사이즈된 브라우저의 width에서 차지할 whith block
+
+          //idx=0 은 초기값(출발좌표값) idx=1 은 최종좌표값
+          values.rect1X[0] =
+            ((obj.canvas as HTMLCanvasElement).width - recalculatedInnerWidth) /
+            2;
+          values.rect1X[1] = values.rect1X[0] - whiteRectWidth;
+          values.rect2X[0] =
+            values.rect1X[0] + recalculatedInnerWidth - whiteRectWidth;
+          values.rect2X[1] = values.rect2X[0] + whiteRectWidth;
+
+          //좌우 흰색 박스 그리기(애니메이션 되기전 초기 상태 box 그리기)
+          //fillRect는 캔버스에서 사각향을 그리게해주는 메소드이다.
+          //fillRect(x좌표, y좌표, width, height);
+          obj.context.fillRect(
+            values.rect1X[0],
+            0,
+            Math.floor(whiteRectWidth),
+
+            //recalculatedInnerHeight 동일
+            (obj.canvas as HTMLCanvasElement).height
+          );
+          obj.context.fillRect(
+            values.rect2X[0],
+            0,
+            Math.floor(whiteRectWidth),
+            recalculatedInnerHeight
+          );
           break;
       }
     }
