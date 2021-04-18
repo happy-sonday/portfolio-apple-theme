@@ -12,11 +12,14 @@ export class Main2Component implements OnInit {
     let yOffset = 0; // window.pageYOffset 대신 쓸 변수
     let prevScrollHeight = 0; // 현재 스크롤 위치(yOffset)보다 이전에 위치한 스크롤 섹션들의 스크롤 높이값의 합
     let currentScene = 0; // 현재 활성화된(눈 앞에 보고있는) 씬(scroll-section)
+    let bodyElem = document.querySelector('.content-body');
     let enterNewScene = false; // 새로운 scene이 시작된 순간 true
     let acc = 0.2;
     let delayedYOffset = 0;
     let rafId;
     let rafState;
+    //기본 섹션값 및 새로고침시 sticky elem이 보일 수 있도록 대응
+    bodyElem.setAttribute('id', `show-scene-0`);
 
     const sceneInfo = [
       {
@@ -141,14 +144,14 @@ export class Main2Component implements OnInit {
       let imgElem;
       for (let i = 0; i < sceneInfo[0].values.videoImageCount; i++) {
         imgElem = new Image();
-        imgElem.src = `/assets/video/001/IMG_${6726 + i}.JPG`;
+        imgElem.src = `../../../assets/video/001/IMG_${6726 + i}.JPG`;
         sceneInfo[0].objs.videoImages.push(imgElem);
       }
 
       let imgElem2;
       for (let i = 0; i < sceneInfo[2].values.videoImageCount; i++) {
         imgElem2 = new Image();
-        imgElem2.src = `/assets/video/002/IMG_${7027 + i}.JPG`;
+        imgElem2.src = `../../../assets/video/002/IMG_${7027 + i}.JPG`;
         sceneInfo[2].objs.videoImages.push(imgElem2);
       }
 
@@ -650,38 +653,56 @@ export class Main2Component implements OnInit {
       enterNewScene = false;
       prevScrollHeight = 0;
 
+      // for (let i = 0; i < currentScene; i++) {
+      //   prevScrollHeight += sceneInfo[i].scrollHeight;
+      // }
+
+      // if (
+      //   delayedYOffset <
+      //   prevScrollHeight + sceneInfo[currentScene].scrollHeight
+      // ) {
+      //   document.body.classList.remove('scroll-effect-end');
+      // }
+
+      // if (
+      //   delayedYOffset >
+      //   prevScrollHeight + sceneInfo[currentScene].scrollHeight
+      // ) {
+      //   enterNewScene = true;
+      //   if (currentScene === sceneInfo.length - 1) {
+      //     document.body.classList.add('scroll-effect-end');
+      //   }
+      //   if (currentScene < sceneInfo.length - 1) {
+      //     currentScene++;
+      //   }
+      //   document.body.setAttribute('id', `show-scene-${currentScene}`);
+      // }
+
+      // if (delayedYOffset < prevScrollHeight) {
+      //   enterNewScene = true;
+      //   // 브라우저 바운스 효과로 인해 마이너스가 되는 것을 방지(모바일)
+      //   if (currentScene === 0) return;
+      //   currentScene--;
+      //   document.body.setAttribute('id', `show-scene-${currentScene}`);
+      // }
+
       for (let i = 0; i < currentScene; i++) {
         prevScrollHeight += sceneInfo[i].scrollHeight;
       }
 
-      if (
-        delayedYOffset <
-        prevScrollHeight + sceneInfo[currentScene].scrollHeight
-      ) {
-        document.body.classList.remove('scroll-effect-end');
+      if (yOffset > prevScrollHeight + sceneInfo[currentScene].scrollHeight) {
+        enterNewScene = true;
+        currentScene++;
       }
 
-      if (
-        delayedYOffset >
-        prevScrollHeight + sceneInfo[currentScene].scrollHeight
-      ) {
+      if (yOffset < prevScrollHeight) {
         enterNewScene = true;
-        if (currentScene === sceneInfo.length - 1) {
-          document.body.classList.add('scroll-effect-end');
-        }
-        if (currentScene < sceneInfo.length - 1) {
-          currentScene++;
-        }
-        document.body.setAttribute('id', `show-scene-${currentScene}`);
-      }
+        if (currentScene === 0) return; //브라우저 바운스 효과로 인해(e. 아이폰 새로고침) 마이너스가 되는 것을 방지(모바일)
 
-      if (delayedYOffset < prevScrollHeight) {
-        enterNewScene = true;
-        // 브라우저 바운스 효과로 인해 마이너스가 되는 것을 방지(모바일)
-        if (currentScene === 0) return;
         currentScene--;
-        document.body.setAttribute('id', `show-scene-${currentScene}`);
       }
+
+      bodyElem.setAttribute('id', `show-scene-${currentScene}`);
 
       if (enterNewScene) return;
 

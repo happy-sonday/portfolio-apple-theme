@@ -158,6 +158,7 @@ export class MainComponent implements OnInit {
         imgElem = new Image();
         imgElem.src = `../../../assets/video/001/IMG_${6726 + i}.JPG`;
         sceneInfo[0].objs.videoImages.push(imgElem);
+        console.log(sceneInfo[0].objs.videoImages);
       }
       let imgElem2;
       for (let i = 0; i < sceneInfo[2].values.videoImageCount; i++) {
