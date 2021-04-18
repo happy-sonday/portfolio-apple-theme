@@ -1,5 +1,6 @@
 import { Component, ComponentFactoryResolver, OnInit } from '@angular/core';
 import { ObjectUnsubscribedError } from 'rxjs';
+import { get } from 'lodash';
 
 @Component({
   selector: 'app-main',
@@ -119,7 +120,8 @@ export class MainComponent implements OnInit {
       },
       {
         type: 'sticky',
-        //heightNum: 5,//범위 오류로 주석처리
+
+        heightNum: 5,
         scrollHeight: 0,
         objs: {
           container: document.querySelector('#scroll-section-3'),
@@ -134,9 +136,16 @@ export class MainComponent implements OnInit {
           ],
           images: [],
         },
+        /* values: {
+          rect1X: [0, 0, { start: 0, end: 0.2 }],
+          rect2X: [0, 0, { start: 0, end: 0.3 }],
+          rectStartY: 0,
+        }, */
+
         values: {
           rect1X: [0, 0, { start: 0, end: 0 }],
           rect2X: [0, 0, { start: 0, end: 0 }],
+          rectStartY: 0,
         },
       },
     ];
@@ -163,7 +172,7 @@ export class MainComponent implements OnInit {
         imgElem3.src = sceneInfo[3].objs.imagesPath[i];
         sceneInfo[3].objs.images.push(imgElem3);
       }
-      console.log(sceneInfo[3].objs.images);
+      // console.log(sceneInfo[3].objs.images);
     }
 
     setCanvasImages();
@@ -434,6 +443,7 @@ export class MainComponent implements OnInit {
         case 3:
           // 가로세로 모두 꽉차게 하기위해 여기서 세팅(계산 필요)
           //현재 브라우저의 크기 /설정한 캔버스의 width 1920
+
           const widthRatio =
             window.innerWidth / (obj.canvas as HTMLCanvasElement).width;
 
@@ -454,9 +464,25 @@ export class MainComponent implements OnInit {
           obj.context.drawImage(obj.images[0], 0, 0);
 
           //캔버스 사이즈에 맞춰 가정한 innerWidth 와 innerHeight
-          const recalculatedInnerWidth = window.innerWidth / canvasScaleRatio;
-          const recalculatedInnerHeight = window.innerHeight / canvasScaleRatio;
-          console.log(recalculatedInnerWidth, recalculatedInnerHeight);
+          //window.innerWidth는 스크롤이 포함된것이기때문에 document.body로 가져온다
+          //const recalculatedInnerWidth = window.innerWidth / canvasScaleRatio;
+          const recalculatedInnerWidth =
+            document.body.offsetWidth / canvasScaleRatio;
+          const recalculatedInnerHeight =
+            document.body.offsetHeight / canvasScaleRatio;
+
+          if (!values.rectStartY) {
+            values.rectStartY = (obj.canvas as HTMLCanvasElement).getBoundingClientRect().top;
+
+            //values.rect1X[2].end = values.rectStartY / scrollHeight;
+            //values.rect2X[2].end = values.rectStartY / scrollHeight;
+            //console.log(get(values.rect1X[2], 'end'));//loadsh로 접근하는 방법
+
+            values.rect1X[2]['end'] = values.rectStartY / scrollHeight;
+            values.rect2X[2]['end'] = values.rectStartY / scrollHeight;
+
+            //console.log(values.rect1X[2]['end'], values.rect2X[2]['end']);
+          }
 
           const whiteRectWidth = recalculatedInnerWidth * 0.15; //현재 리사이즈된 브라우저의 width에서 차지할 whith block
 
@@ -472,19 +498,34 @@ export class MainComponent implements OnInit {
           //좌우 흰색 박스 그리기(애니메이션 되기전 초기 상태 box 그리기)
           //fillRect는 캔버스에서 사각향을 그리게해주는 메소드이다.
           //fillRect(x좌표, y좌표, width, height);
+          // obj.context.fillRect(
+          //   values.rect1X[0],
+          //   0,
+          //   Math.floor(whiteRectWidth),
+
+          //   //recalculatedInnerHeight 동일
+          //   (obj.canvas as HTMLCanvasElement).height
+          // );
+          // obj.context.fillRect(
+          //   values.rect2X[0],
+          //   0,
+          //   Math.floor(whiteRectWidth),
+          //   recalculatedInnerHeight
+          // );
+
+          //console.log(calcValues(values.rect1X, currentYOffset));
+
           obj.context.fillRect(
-            values.rect1X[0],
+            Math.floor(calcValues(values.rect1X, currentYOffset)),
             0,
             Math.floor(whiteRectWidth),
-
-            //recalculatedInnerHeight 동일
             (obj.canvas as HTMLCanvasElement).height
           );
           obj.context.fillRect(
-            values.rect2X[0],
+            Math.floor(calcValues(values.rect2X, currentYOffset)),
             0,
             Math.floor(whiteRectWidth),
-            recalculatedInnerHeight
+            (obj.canvas as HTMLCanvasElement).height
           );
           break;
       }
@@ -504,6 +545,8 @@ export class MainComponent implements OnInit {
         //const partScrollHeight = partScrollEnd - partScrollStart;
         const partScrollHeight =
           scrollHeight * (values[2].end - values[2].start);
+        console.log(partScrollStart, partScrollEnd);
+
         if (
           currentYOffset >= partScrollStart &&
           currentYOffset <= partScrollEnd
