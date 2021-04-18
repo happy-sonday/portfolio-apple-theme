@@ -454,11 +454,9 @@ export class MainComponent implements OnInit {
           if (widthRatio <= heightRatio) {
             //캔버스보다 브라우저 창이 홀쭉한 경우
             canvasScaleRatio = heightRatio;
-            console.log('widthRatio로 결정');
           } else {
             //캔버스보다 브라우저 창이 납작한 경우
             canvasScaleRatio = widthRatio;
-            console.log('heightRatio로 결정');
           }
           (obj.canvas as HTMLCanvasElement).style.transform = `scale(${canvasScaleRatio})`;
           obj.context.drawImage(obj.images[0], 0, 0);
@@ -466,13 +464,16 @@ export class MainComponent implements OnInit {
           //캔버스 사이즈에 맞춰 가정한 innerWidth 와 innerHeight
           //window.innerWidth는 스크롤이 포함된것이기때문에 document.body로 가져온다
           //const recalculatedInnerWidth = window.innerWidth / canvasScaleRatio;
+          //const recalculatedInnerHeight = window.innerHeight / canvasScaleRatio;
           const recalculatedInnerWidth =
             document.body.offsetWidth / canvasScaleRatio;
           const recalculatedInnerHeight =
             document.body.offsetHeight / canvasScaleRatio;
 
           if (!values.rectStartY) {
-            values.rectStartY = (obj.canvas as HTMLCanvasElement).getBoundingClientRect().top;
+            //values.rectStartY = (obj.canvas as HTMLCanvasElement).getBoundingClientRect().top;
+            values.rectStartY = (obj.canvas as HTMLCanvasElement).offsetTop;
+            console.log(values.rectStartY);
 
             //values.rect1X[2].end = values.rectStartY / scrollHeight;
             //values.rect2X[2].end = values.rectStartY / scrollHeight;
@@ -480,8 +481,6 @@ export class MainComponent implements OnInit {
 
             values.rect1X[2]['end'] = values.rectStartY / scrollHeight;
             values.rect2X[2]['end'] = values.rectStartY / scrollHeight;
-
-            //console.log(values.rect1X[2]['end'], values.rect2X[2]['end']);
           }
 
           const whiteRectWidth = recalculatedInnerWidth * 0.15; //현재 리사이즈된 브라우저의 width에서 차지할 whith block
@@ -545,7 +544,6 @@ export class MainComponent implements OnInit {
         //const partScrollHeight = partScrollEnd - partScrollStart;
         const partScrollHeight =
           scrollHeight * (values[2].end - values[2].start);
-        console.log(partScrollStart, partScrollEnd);
 
         if (
           currentYOffset >= partScrollStart &&
