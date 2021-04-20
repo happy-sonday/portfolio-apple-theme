@@ -208,6 +208,7 @@ export class MainComponent implements OnInit {
           break;
         }
       }
+      document.body.setAttribute('id', `show-scene-${currentScene}`);
 
       const heightRatio = window.innerHeight / 1000;
       (sceneInfo[0].objs
