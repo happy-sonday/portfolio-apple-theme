@@ -10,6 +10,10 @@ export class Main2Component implements OnInit {
   constructor() {}
 
   ngOnInit(): void {
+    let yOffset = 0;
+    let prevScrollHeight = 0; //현재 스크롤에 위치 이전의 누적 높이 값
+    let currentScene = 0; //현재 활성화된 섹션
+
     const sceneInfo = [
       {
         //sceiont-0
@@ -55,9 +59,29 @@ export class Main2Component implements OnInit {
         (sceneInfo[i].objs
           .container as HTMLElement).style.height = `${sceneInfo[i].scrollHeight}px`;
       }
-
-      console.log(sceneInfo);
     }
+
+    function scrollLoop() {
+      prevScrollHeight = 0;
+      for (let i = 0; i < currentScene; i++) {
+        prevScrollHeight += sceneInfo[i].scrollHeight;
+      }
+
+      if (yOffset > prevScrollHeight + sceneInfo[currentScene].scrollHeight) {
+        currentScene++;
+      }
+
+      if (yOffset < prevScrollHeight) {
+        currentScene--;
+      }
+      console.log(currentScene);
+    }
+
+    window.addEventListener('resize', setLayout);
+    window.addEventListener('scroll', () => {
+      yOffset = window.pageYOffset; //현재 스크롤 위치;
+      scrollLoop();
+    });
 
     setLayout();
   }
