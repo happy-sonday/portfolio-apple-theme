@@ -13,6 +13,7 @@ export class Main2Component implements OnInit {
     let yOffset = 0;
     let prevScrollHeight = 0; //현재 스크롤에 위치 이전의 누적 높이 값
     let currentScene = 0; //현재 활성화된 섹션
+    let enterNewScene = false; //새로운 scene이 시작된 순간 true;
 
     const sceneInfo = [
       {
@@ -111,12 +112,14 @@ export class Main2Component implements OnInit {
     }
 
     function scrollLoop() {
+      enterNewScene = false;
       prevScrollHeight = 0;
       for (let i = 0; i < currentScene; i++) {
         prevScrollHeight += sceneInfo[i].scrollHeight;
       }
 
       if (yOffset > prevScrollHeight + sceneInfo[currentScene].scrollHeight) {
+        enterNewScene = true;
         currentScene++;
         document
           .querySelector('.content-body')
@@ -124,12 +127,15 @@ export class Main2Component implements OnInit {
       }
 
       if (yOffset < prevScrollHeight) {
+        enterNewScene = true;
         if (currentScene === 0) return;
         currentScene--;
         document
           .querySelector('.content-body')
           .setAttribute('id', `show-scene-section-${currentScene}`);
       }
+
+      if (enterNewScene) return;
 
       //document.body.setAttribute('id', `show-scene-section-${currentScene}`);
       playAnimation();
