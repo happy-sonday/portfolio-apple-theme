@@ -99,19 +99,20 @@ a {
   color: #888;
   font-size: 0.6rem;
 }
-
-#show-scene-0 #scroll-section-0 .sticky-elem,
-#show-scene-1 #scroll-section-1 .sticky-elem,
-#show-scene-2 #scroll-section-2 .sticky-elem,
-#show-scene-3 #scroll-section-3 .sticky-elem {
-  display: block;
-}
-
 .sticky-elem {
+  display: none;
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
+}
+#show-scene-section-0 #scroll-section-0 .sticky-elem,
+#show-scene-section-1 #scroll-section-1 .sticky-elem,
+#show-scene-section-2 #scroll-section-2 .sticky-elem,
+#show-scene-section-3 #scroll-section-3 .sticky-elem {
+  //background-color: darkblue;//padding때문에 섹션침범함 주석처리하고 확인해 볼것
+
+  display: block;
 }
 
 @media (min-width: 1024px) {

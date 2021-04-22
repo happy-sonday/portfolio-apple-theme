@@ -59,6 +59,18 @@ export class Main2Component implements OnInit {
         (sceneInfo[i].objs
           .container as HTMLElement).style.height = `${sceneInfo[i].scrollHeight}px`;
       }
+
+      let totalScrollHeight = 0;
+      for (let i = 0; i < sceneInfo.length; i++) {
+        totalScrollHeight += sceneInfo[i].scrollHeight;
+        if (totalScrollHeight >= pageYOffset) {
+          currentScene = i;
+          break;
+        }
+      }
+      document
+        .querySelector('.content-body')
+        .setAttribute('id', `show-scene-section-${currentScene}`);
     }
 
     function scrollLoop() {
@@ -72,16 +84,23 @@ export class Main2Component implements OnInit {
       }
 
       if (yOffset < prevScrollHeight) {
+        if (currentScene === 0) return;
         currentScene--;
       }
       console.log(currentScene);
+
+      document
+        .querySelector('.content-body')
+        .setAttribute('id', `show-scene-section-${currentScene}`);
+      //document.body.setAttribute('id', `show-scene-section-${currentScene}`);
     }
 
-    window.addEventListener('resize', setLayout);
     window.addEventListener('scroll', () => {
       yOffset = window.pageYOffset; //현재 스크롤 위치;
       scrollLoop();
     });
+    window.addEventListener('load', setLayout);
+    window.addEventListener('resize', setLayout);
 
     setLayout();
   }
