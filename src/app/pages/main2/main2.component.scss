@@ -74,14 +74,15 @@ a {
 .desc-message {
   font-weight: bold;
   width: 50%;
+  display: flex;
+  flex-direction: column;
 }
 
 .pin {
   width: 1px;
   height: 100px;
-  background-color: rgb(29, 29, 31);
+  background: rgb(29, 29, 31);
 }
-
 .mid-message {
   max-width: 1000px;
   margin: 0 auto;
@@ -117,6 +118,15 @@ a {
   display: flex;
 }
 
+#scroll-section-2 .b {
+  top: 10%;
+  left: 40%;
+}
+#scroll-section-2 .c {
+  top: 15%;
+  left: 45%;
+}
+
 @media (min-width: 1024px) {
   #scroll-section-01 {
   }
@@ -149,5 +159,12 @@ a {
 
   .canvas-caption {
     font-size: 2rem;
+  }
+  #scroll-section-2 .b {
+    top: 20%;
+    left: 53%;
+  }
+  #scroll-section-2 .c {
+    left: 55%;
   }
 }
