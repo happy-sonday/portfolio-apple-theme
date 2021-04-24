@@ -125,6 +125,7 @@ export class Main2Component implements OnInit {
           rect1X: [0, 0, { start: 0, end: 0 }],
           rect2X: [0, 0, { start: 0, end: 0 }],
           blendHeight: [0, 0, { start: 0, end: 0 }],
+          canvas_scale: [0, 0, { start: 0, end: 0 }],
           rectStartY: 0,
         },
       },
@@ -569,12 +570,12 @@ export class Main2Component implements OnInit {
 
           if (scrollRatio < values.rect1X[2]['end']) {
             step = 1;
-            console.log('캔버스 닿기전');
+            //console.log('캔버스 닿기전');
             objs.canvas.classList.remove('sticky');
           } else {
             step = 2;
             //이미지 블렌드
-            console.log('캔버스 닿은후');
+            //console.log('캔버스 닿은후');
             values.blendHeight[0] = 0;
             values.blendHeight[1] = (objs.canvas as HTMLCanvasElement).height;
             values.blendHeight[2]['start'] = values.rect1X[2]['end'];
@@ -599,6 +600,21 @@ export class Main2Component implements OnInit {
                 (objs.canvas as HTMLCanvasElement).height * canvasScaleRatio
               ) / 2
             }px`;
+            if (scrollRatio > values.blendHeight[2]['end']) {
+              console.log('축소시작');
+              values.canvas_scale[0] = canvasScaleRatio;
+              values.canvas_scale[1] =
+                document.body.offsetWidth /
+                (1.5 * (objs.canvas as HTMLCanvasElement).width);
+
+              values.canvas_scale[2]['start'] = values.blendHeight[2]['end'];
+              values.canvas_scale[2]['end'] =
+                values.canvas_scale[2]['start'] + 0.2;
+              (objs.canvas as HTMLCanvasElement).style.transform = `scale(${calcValues(
+                values.canvas_scale,
+                currentYOffset
+              )})`;
+            }
           }
           break;
       }
