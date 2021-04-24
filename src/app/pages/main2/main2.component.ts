@@ -27,6 +27,11 @@ export class Main2Component implements OnInit {
           messageB: document.querySelector('#scroll-section-0 .main-message.b'),
           messageC: document.querySelector('#scroll-section-0 .main-message.c'),
           messageD: document.querySelector('#scroll-section-0 .main-message.d'),
+          canvas: document.querySelector('#video-canvas-0'),
+          context: (document.querySelector(
+            '#video-canvas-0'
+          ) as HTMLCanvasElement).getContext('2d'),
+          videoImages: [],
         },
         values: {
           messageA_opacity_in: [0, 1, { start: 0.1, end: 0.2 }],
@@ -45,12 +50,14 @@ export class Main2Component implements OnInit {
           messageB_translateY_out: [0, -20, { start: 0.45, end: 0.5 }],
           messageC_translateY_out: [0, -20, { start: 0.65, end: 0.7 }],
           messageD_translateY_out: [0, -20, { start: 0.85, end: 0.9 }],
+          videoImageCount: 300,
+          imageSequence: [0, 299],
         },
       },
       {
         //section-1
         type: 'normal',
-        //heightNum: 5, //브라우저 높이의 5배로 scrollHeight 세팅
+        heightNum: 5, //브라우저 높이의 5배로 scrollHeight 세팅
         scrollHeight: 0,
         objs: {
           container: document.querySelector('#scroll-section-1'),
@@ -98,6 +105,17 @@ export class Main2Component implements OnInit {
         values: {},
       },
     ];
+
+    function setCanvasImages() {
+      let imgElem;
+      for (let i = 0; i < sceneInfo[0].values.videoImageCount; i++) {
+        imgElem = new Image();
+        imgElem.src = `/assets/video/001/IMG_${6726 + i}.JPG`;
+        sceneInfo[0].objs.videoImages.push(imgElem);
+      }
+    }
+
+    setCanvasImages();
 
     function setLayout() {
       for (let i = 0; i < sceneInfo.length; i++) {
@@ -167,6 +185,10 @@ export class Main2Component implements OnInit {
 
       switch (currentScene) {
         case 0:
+          let sequence = Math.round(
+            calcValues(values.imageSequence, currentYOffset)
+          );
+          objs.context.drawImage(objs.videoImages[sequence], 0, 0);
           if (scrollRatio <= 0.22) {
             //in
             (objs.messageA as HTMLElement).style.opacity = calcValues(

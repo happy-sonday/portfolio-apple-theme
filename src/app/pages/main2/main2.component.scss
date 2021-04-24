@@ -127,6 +127,11 @@ a {
   left: 45%;
 }
 
+.sticky-elem-canvas {
+  top: 0;
+  background: gray;
+}
+
 @media (min-width: 1024px) {
   #scroll-section-01 {
   }
