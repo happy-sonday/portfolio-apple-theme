@@ -111,6 +111,15 @@ export class Main2Component implements OnInit {
         objs: {
           container: document.querySelector('#scroll-section-3'),
           canvasCaption: document.querySelector('.canvas-caption'),
+          canvas: document.querySelector('.image-blend-canvas'),
+          context: (document.querySelector(
+            '.image-blend-canvas'
+          ) as HTMLCanvasElement).getContext('2d'),
+          imagesPath: [
+            '/assets/img/blend-image-1.jpg',
+            '/assets/img/blend-image-2.jpg',
+          ],
+          images: [],
         },
         values: {},
       },
@@ -129,6 +138,13 @@ export class Main2Component implements OnInit {
         imgElem2.src = `/assets/video/002/IMG_${7027 + i}.JPG`;
         sceneInfo[2].objs.videoImages.push(imgElem2);
       }
+      let imgElem3;
+      for (let i = 0; i < sceneInfo[3].objs.imagesPath.length; i++) {
+        imgElem3 = new Image();
+        imgElem3.src = sceneInfo[3].objs.imagesPath[i];
+        sceneInfo[3].objs.images.push(imgElem3);
+      }
+      console.log(sceneInfo[3].objs.images);
     }
 
     setCanvasImages();
@@ -406,6 +422,23 @@ export class Main2Component implements OnInit {
 
           break;
         case 3:
+          //가로 세로 모두 꽉차게 하기 위해 여기서 세팅(계산필요)
+          const widthRatio =
+            window.innerWidth / (objs.canvas as HTMLCanvasElement).width;
+          const heightRatio =
+            window.innerHeight / (objs.canvas as HTMLCanvasElement).height;
+
+          let canvasScaleRatio;
+
+          if (widthRatio <= heightRatio) {
+            //캔버스보다 브라우저 창이 홀쭉한 경우
+            canvasScaleRatio = heightRatio;
+          } else {
+            canvasScaleRatio = widthRatio;
+          }
+          (objs.canvas as HTMLCanvasElement).style.transform = `scale(${canvasScaleRatio})`;
+          objs.context.drawImage(objs.images[0], 0, 0);
+
           break;
       }
     }
