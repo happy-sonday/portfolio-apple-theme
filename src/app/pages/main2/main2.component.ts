@@ -614,6 +614,18 @@ export class Main2Component implements OnInit {
                 values.canvas_scale,
                 currentYOffset
               )})`;
+              (objs.canvas as HTMLCanvasElement).style.marginTop = '0px';
+            }
+
+            if (
+              scrollRatio > values.canvas_scale[2]['end'] &&
+              values.canvas_scale[2]['end'] > 0
+            ) {
+              //확대 축소 duration을 0.2씩 가져갔기때문에 0.4
+              objs.canvas.classList.remove('sticky');
+              (objs.canvas as HTMLCanvasElement).style.marginTop = `${
+                scrollHeight * 0.4
+              }px`;
             }
           }
           break;
