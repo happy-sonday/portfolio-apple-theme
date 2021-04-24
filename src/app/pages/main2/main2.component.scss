@@ -25,6 +25,9 @@ a {
 }
 
 #scroll-section-0 h1 {
+  position: relative;
+  z-index: 5;
+  top: -10vh;
   font-size: 4rem;
   text-align: center;
 }

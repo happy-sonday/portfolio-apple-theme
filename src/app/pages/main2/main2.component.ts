@@ -52,6 +52,7 @@ export class Main2Component implements OnInit {
           messageD_translateY_out: [0, -20, { start: 0.85, end: 0.9 }],
           videoImageCount: 300,
           imageSequence: [0, 299],
+          canvas_opacity: [1, 0, { start: 0.9, end: 1 }],
         },
       },
       {
@@ -193,6 +194,10 @@ export class Main2Component implements OnInit {
             calcValues(values.imageSequence, currentYOffset)
           );
           objs.context.drawImage(objs.videoImages[sequence], 0, 0);
+          (objs.canvas as HTMLCanvasElement).style.opacity = calcValues(
+            values.canvas_opacity,
+            currentYOffset
+          );
           if (scrollRatio <= 0.22) {
             //in
             (objs.messageA as HTMLElement).style.opacity = calcValues(
@@ -406,7 +411,14 @@ export class Main2Component implements OnInit {
       yOffset = window.pageYOffset; //현재 스크롤 위치;
       scrollLoop();
     });
-    window.addEventListener('load', setLayout);
+    window.addEventListener('load', () => {
+      setLayout();
+      sceneInfo[0].objs.context.drawImage(
+        sceneInfo[0].objs.videoImages[0],
+        0,
+        0
+      ); //첫번째장면만 로드
+    });
     window.addEventListener('resize', setLayout);
 
     setLayout();
