@@ -424,8 +424,74 @@ export class Main2Component implements OnInit {
             )})`;
           }
 
+          //currentScene 3에서 쓰는 캔버스를 미리 그려주기 시작
+          if (scrollRatio > 0.9) {
+            const objs = sceneInfo[3].objs;
+            const values = sceneInfo[3].values;
+            const widthRatio =
+              window.innerWidth / (objs.canvas as HTMLCanvasElement).width;
+            const heightRatio =
+              window.innerHeight / (objs.canvas as HTMLCanvasElement).height;
+
+            let canvasScaleRatio;
+
+            if (widthRatio <= heightRatio) {
+              //캔버스보다 브라우저 창이 홀쭉한 경우
+              canvasScaleRatio = heightRatio;
+            } else {
+              canvasScaleRatio = widthRatio;
+            }
+            (objs.canvas as HTMLCanvasElement).style.transform = `scale(${canvasScaleRatio})`;
+            objs.context.fillStyle = 'white';
+            objs.context.drawImage(objs.images[0], 0, 0);
+
+            //캔버스 사이즈에 맞춰 가정한 innerWidth와 innerHeight
+            //innerWidth값은 스크롤 width가 포함되서 offsetWidth값으로 변경
+            const recalculattedInnerWidth =
+              document.body.offsetWidth / canvasScaleRatio;
+            const recalculattedInnerHeight =
+              window.innerHeight / canvasScaleRatio;
+
+            // if (!values.rectStartY) {
+            //   //values.rectStartY = (objs.canvas as HTMLCanvasElement).getBoundingClientRect().top;
+            //   values.rectStartY =
+            //     (objs.canvas as HTMLCanvasElement).offsetTop +
+            //     ((objs.canvas as HTMLCanvasElement).height -
+            //       (objs.canvas as HTMLCanvasElement).height *
+            //         canvasScaleRatio) /
+            //       2;
+            //   values.rect1X[2]['start'] = window.innerHeight / 2 / scrollHeight;
+            //   values.rect2X[2]['start'] = window.innerHeight / 2 / scrollHeight;
+            //   values.rect1X[2]['end'] = values.rectStartY / scrollHeight;
+            //   values.rect2X[2]['end'] = values.rectStartY / scrollHeight;
+            // }
+
+            const whiteRectWidth = recalculattedInnerWidth * 0.15;
+            values.rect1X[0] =
+              ((objs.canvas as HTMLCanvasElement).width -
+                recalculattedInnerWidth) /
+              2;
+            values.rect1X[1] = values.rect1X[0] - whiteRectWidth;
+            values.rect2X[0] =
+              values.rect1X[0] + recalculattedInnerWidth - whiteRectWidth;
+            values.rect2X[1] = values.rect2X[0] + whiteRectWidth;
+
+            objs.context.fillRect(
+              values.rect1X[0],
+              0,
+              Math.round(whiteRectWidth),
+              (objs.canvas as HTMLCanvasElement).height
+            );
+            objs.context.fillRect(
+              values.rect2X[0],
+              0,
+              Math.round(whiteRectWidth),
+              (objs.canvas as HTMLCanvasElement).height
+            );
+          }
           break;
         case 3:
+          let step = 0;
           //가로 세로 모두 꽉차게 하기 위해 여기서 세팅(계산필요)
           const widthRatio =
             window.innerWidth / (objs.canvas as HTMLCanvasElement).width;
@@ -490,15 +556,32 @@ export class Main2Component implements OnInit {
           objs.context.fillRect(
             calcValues(values.rect1X, currentYOffset),
             0,
-            Math.round(whiteRectWidth),
+            whiteRectWidth,
             (objs.canvas as HTMLCanvasElement).height
           );
           objs.context.fillRect(
             calcValues(values.rect2X, currentYOffset),
             0,
-            Math.round(whiteRectWidth),
+            whiteRectWidth,
             (objs.canvas as HTMLCanvasElement).height
           );
+
+          if (scrollRatio < values.rect1X[2]['end']) {
+            step = 1;
+            console.log('캔버스 닿기전');
+            objs.canvas.classList.remove('sticky');
+          } else {
+            step = 2;
+            //이미지 블렌드
+            console.log('캔버스 닿은후');
+            objs.canvas.classList.add('sticky');
+            (objs.canvas as HTMLCanvasElement).style.top = `${
+              -(
+                (objs.canvas as HTMLCanvasElement).height -
+                (objs.canvas as HTMLCanvasElement).height * canvasScaleRatio
+              ) / 2
+            }px`;
+          }
           break;
       }
     }

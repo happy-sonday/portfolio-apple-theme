@@ -21,7 +21,7 @@ a {
 .scroll-section {
   position: relative;
   padding-top: 50vh;
-  border: 3px solid red;
+  // border: 3px solid red;
 }
 
 #scroll-section-0 h1 {
@@ -143,8 +143,8 @@ a {
 }
 
 .image-blend-canvas {
-  border: 3px solid royalblue;
-  background: gray;
+  // border: 3px solid royalblue;
+  //background: gray;
 }
 
 #scroll-section-3 {
@@ -153,9 +153,12 @@ a {
   align-items: center;
 }
 
+.image-blend-canvas.sticky {
+  position: fixed;
+  top: 0;
+}
+
 @media (min-width: 1024px) {
-  #scroll-section-01 {
-  }
   .main-message {
     font-size: 4vw;
   }
