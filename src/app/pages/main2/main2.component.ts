@@ -124,6 +124,7 @@ export class Main2Component implements OnInit {
         values: {
           rect1X: [0, 0, { start: 0, end: 0 }],
           rect2X: [0, 0, { start: 0, end: 0 }],
+          blendHeight: [0, 0, { start: 0, end: 0 }],
           rectStartY: 0,
         },
       },
@@ -574,6 +575,23 @@ export class Main2Component implements OnInit {
             step = 2;
             //이미지 블렌드
             console.log('캔버스 닿은후');
+            values.blendHeight[0] = 0;
+            values.blendHeight[1] = (objs.canvas as HTMLCanvasElement).height;
+            values.blendHeight[2]['start'] = values.rect1X[2]['end'];
+            values.blendHeight[2]['end'] = values.blendHeight[2]['start'] + 0.2;
+
+            const blendHeight = calcValues(values.blendHeight, currentYOffset);
+            objs.context.drawImage(
+              objs.images[1],
+              0,
+              (objs.canvas as HTMLCanvasElement).height - blendHeight,
+              (objs.canvas as HTMLCanvasElement).width,
+              blendHeight,
+              0,
+              (objs.canvas as HTMLCanvasElement).height - blendHeight,
+              (objs.canvas as HTMLCanvasElement).width,
+              blendHeight
+            );
             objs.canvas.classList.add('sticky');
             (objs.canvas as HTMLCanvasElement).style.top = `${
               -(
