@@ -79,6 +79,7 @@ a {
   width: 50%;
   display: flex;
   flex-direction: column;
+  opacity: 0; //section2시작할때 반짝하고 나타는것 방지
 }
 
 .pin {
