@@ -441,6 +441,7 @@ export class Main2Component implements OnInit {
             canvasScaleRatio = widthRatio;
           }
           (objs.canvas as HTMLCanvasElement).style.transform = `scale(${canvasScaleRatio})`;
+          objs.context.fillStyle = 'white';
           objs.context.drawImage(objs.images[0], 0, 0);
 
           //캔버스 사이즈에 맞춰 가정한 innerWidth와 innerHeight
@@ -451,7 +452,14 @@ export class Main2Component implements OnInit {
             window.innerHeight / canvasScaleRatio;
 
           if (!values.rectStartY) {
-            values.rectStartY = (objs.canvas as HTMLCanvasElement).getBoundingClientRect().top;
+            //values.rectStartY = (objs.canvas as HTMLCanvasElement).getBoundingClientRect().top;
+            values.rectStartY =
+              (objs.canvas as HTMLCanvasElement).offsetTop +
+              ((objs.canvas as HTMLCanvasElement).height -
+                (objs.canvas as HTMLCanvasElement).height * canvasScaleRatio) /
+                2;
+            values.rect1X[2]['start'] = window.innerHeight / 2 / scrollHeight;
+            values.rect2X[2]['start'] = window.innerHeight / 2 / scrollHeight;
             values.rect1X[2]['end'] = values.rectStartY / scrollHeight;
             values.rect2X[2]['end'] = values.rectStartY / scrollHeight;
           }
