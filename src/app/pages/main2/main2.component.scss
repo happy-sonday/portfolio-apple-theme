@@ -129,7 +129,13 @@ a {
 
 .sticky-elem-canvas {
   top: 0;
-  background: gray;
+  height: 100%;
+}
+
+.sticky-elem-canvas canvas {
+  position: absolute;
+  top: 50%;
+  left: 50%;
 }
 
 @media (min-width: 1024px) {

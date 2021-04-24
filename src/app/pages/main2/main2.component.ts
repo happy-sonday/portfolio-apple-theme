@@ -141,6 +141,10 @@ export class Main2Component implements OnInit {
       document
         .querySelector('.content-body')
         .setAttribute('id', `show-scene-section-${currentScene}`);
+
+      const heightRatio = window.innerHeight / 1080;
+      (sceneInfo[0].objs
+        .canvas as HTMLCanvasElement).style.transform = `translate3d(-50%, -50%, 0) scale(${heightRatio})`;
     }
 
     function calcValues(values, currentYOffset) {
