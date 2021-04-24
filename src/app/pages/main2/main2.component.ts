@@ -121,7 +121,10 @@ export class Main2Component implements OnInit {
           ],
           images: [],
         },
-        values: {},
+        values: {
+          rect1X: [0, 0, { start: 0, end: 0 }],
+          rect2X: [0, 0, { start: 0, end: 0 }],
+        },
       },
     ];
 
@@ -439,6 +442,34 @@ export class Main2Component implements OnInit {
           (objs.canvas as HTMLCanvasElement).style.transform = `scale(${canvasScaleRatio})`;
           objs.context.drawImage(objs.images[0], 0, 0);
 
+          //캔버스 사이즈에 맞춰 가정한 innerWidth와 innerHeight
+          const recalculattedInnerWidth = window.innerWidth / canvasScaleRatio;
+          const recalculattedInnerHeight =
+            window.innerHeight / canvasScaleRatio;
+
+          const whiteRectWidth = recalculattedInnerWidth * 0.15;
+          values.rect1X[0] =
+            ((objs.canvas as HTMLCanvasElement).width -
+              recalculattedInnerWidth) /
+            2;
+          values.rect1X[1] = values.rect1X[0] - whiteRectWidth;
+          values.rect2X[0] =
+            values.rect1X[0] + recalculattedInnerWidth - whiteRectWidth;
+          values.rect2X[1] = values.rect2X[0] + whiteRectWidth;
+
+          //좌우 흰색박스 그리기
+          objs.context.fillRect(
+            values.rect1X[0],
+            0,
+            Math.round(whiteRectWidth),
+            recalculattedInnerHeight
+          );
+          objs.context.fillRect(
+            values.rect2X[0],
+            0,
+            Math.round(whiteRectWidth),
+            recalculattedInnerHeight
+          );
           break;
       }
     }
