@@ -88,7 +88,7 @@ a {
   background: rgb(29, 29, 31);
 }
 .mid-message {
-  max-width: 1000px;
+  width: 1000px;
   margin: 0 auto;
   font-size: 1.2rem;
   color: #888;
@@ -101,7 +101,7 @@ a {
 
 .canvas-caption {
   max-width: 1000px;
-  margin: 0 auto;
+  margin: -5em auto 0;
   padding: 0 16px;
   color: #888;
   font-size: 0.6rem;
@@ -165,6 +165,7 @@ a {
   .description {
     margin: 0 auto;
     font-size: 2rem;
+    padding: 0;
   }
   .description strong {
     font-size: 6rem;
@@ -184,9 +185,11 @@ a {
 
   .mid-message {
     font-size: 4vw;
+    padding: 0;
   }
 
   .canvas-caption {
+    padding: 0;
     font-size: 2rem;
   }
   #scroll-section-2 .b {
